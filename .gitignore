@@ -1,0 +1,18 @@
+
+#仅仅忽略根目录下的 .vscode 文件夹(包括其内部文件)
+/.vscode
+/latex
+/html
+/latex
+Doxyfile
+#忽略所有 build 文件夹(包括其内部文件)
+**/build
+**/.idea
+**/cmake-build-debug
+
+*.o
+*.exe
+*.obj
+*.txt
+
+!CMakeLists.txt
