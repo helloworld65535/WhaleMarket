@@ -117,12 +117,12 @@ std::ostream &operator<<(std::ostream &cout, const Date &date)
     return cout;
 }
 
-std::istream &operator>>(std::istream &cin, Date &date)
+std::istream &operator>>(std::istream &in, Date &date)
 {
     std::string str;
-    cin >> str;
+    in >> str;
     date.year_ = std::stoul(str.substr(0, 4));
     date.month_ = std::stoul(str.substr(5, 2));
     date.day_ = std::stoul(str.substr(8, 2));
-    return cin;
+    return in;
 }
