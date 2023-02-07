@@ -9,8 +9,8 @@ set(SOURCES
     src/UserManager.cpp
     src/Good.cpp
     src/GoodManager.cpp
-    # test/testUser.cpp
-    # test/testUserManager.cpp
+    src/Order.cpp
+    src/OrderManager.cpp
     test/test.cpp
 )
 
