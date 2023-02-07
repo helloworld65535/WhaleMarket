@@ -11,7 +11,7 @@ set(SOURCES
     src/GoodManager.cpp
     # test/testUser.cpp
     # test/testUserManager.cpp
-    test/testGood.cpp
+    test/test.cpp
 )
 
 add_executable(${PROJECT_NAME} 

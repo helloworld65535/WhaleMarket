@@ -2,10 +2,21 @@
 #include "GoodManager.h"
 #include <fstream>
 
-GoodManager::GoodManager()
+GoodManager::GoodManager(std::string dataFilePath)
 {
     goodNumber_ = 0;
     savedGoodId_ = 0;
+    dataFilePath_ = dataFilePath;
+}
+
+GoodManager::~GoodManager()
+{
+    saveGoods();
+
+    for (auto i = goods_.begin(); i != goods_.end(); ++i)
+    {
+        delete (*i);
+    }
 }
 
 bool GoodManager::pullGoods()
@@ -20,6 +31,7 @@ bool GoodManager::pullGoods()
         {
             in >> goodNumber_;
         }
+        in >> str;
         if (str == "savedGoodId=")
         {
             in >> savedGoodId_;
@@ -28,13 +40,15 @@ bool GoodManager::pullGoods()
         for (int i = 0; i < goodNumber_; ++i)
         {
             Good *good = new Good();
-            in >> *good;
+            in >> (*good);
             goods_.push_back(good);
             ++goodNumber;
         }
-        goodNumber_=goodNumber;
+        goodNumber_ = goodNumber;
+        in.close();
         return true;
     }
+    in.close();
     return false;
 }
 
@@ -42,7 +56,7 @@ bool GoodManager::saveGoods() const
 {
     std::ofstream out(dataFilePath_, std::ios::out);
     out << "goodNumber=" << std::endl
-        << "goodNumber=" << std::endl
+        << goodNumber_ << std::endl
         << "savedGoodId=" << std::endl
         << savedGoodId_ << std::endl;
 
@@ -50,8 +64,23 @@ bool GoodManager::saveGoods() const
     {
         out << *(*i);
     }
-
+    out.close();
     return true;
+}
+
+void GoodManager::addGoods(Good *good)
+{
+    good->setId(getNewId());
+    goods_.push_back(good);
+    ++goodNumber_;
+}
+
+void GoodManager::traverse(void (*func)(Good *good)) const
+{
+    for (auto i = goods_.begin(); i != goods_.end(); ++i)
+    {
+        func((*i));
+    }
 }
 
 std::string GoodManager::getNewId()
