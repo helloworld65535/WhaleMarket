@@ -1,28 +1,19 @@
-#include "GoodManager.h"
+#include "OrderManager.h"
 
-int testsaveGoods(void)
+int testaddOrder(void)
 {
-    GoodManager goodManager("goodManager.txt");
-
-    goodManager.addGoods(new Good("123", "人机交互", 56.5, "软件工程用书", "S000000001", Date(2023, 1, 2), Good::IN_SALE));
-    goodManager.addGoods(new Good("123", "人机交互", 56.5, "软件工程用书", "S000000001", Date(2023, 1, 2), Good::IN_SALE));
-    goodManager.addGoods(new Good("123", "人机交互", 56.5, "软件工程用书", "S000000001", Date(2023, 1, 2), Good::IN_SALE));
-    goodManager.addGoods(new Good("123", "人机交互", 56.5, "软件工程用书", "S000000001", Date(2023, 1, 2), Good::IN_SALE));
-    goodManager.saveGoods();
+    OrderManager orderManager("Order.txt");
+    orderManager.addOrder(new Order("Order", "G000000001", "B000000001", Date(2023, 2, 2), 2));
+    orderManager.addOrder(new Order("Order", "G000000001", "B000000001", Date(2023, 2, 2), 2));
+    orderManager.addOrder(new Order("Order", "G000000001", "B000000001", Date(2023, 2, 2), 2));
+    orderManager.addOrder(new Order("Order", "G000000001", "B000000001", Date(2023, 2, 2), 2));
     return 0;
 }
 
-int testpullGoods(void)
+int main(void)
 {
-    GoodManager goodManager("goodManager.txt");
-    goodManager.pullGoods();
-    goodManager.traverse([](Good *good) -> void
-                         { std::cout << (*good); });
-    return 0;
-}
-int main(int argc, char const *argv[])
-{
-    testpullGoods();
+    OrderManager orderManager("Order.txt");
+    orderManager.pullOrders();
 
     return 0;
 }
