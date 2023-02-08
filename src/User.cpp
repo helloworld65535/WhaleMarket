@@ -3,8 +3,20 @@
 
 // User Begin ================================================================================================
 
-User::User(User::UserType type) : type_(type)
+User::User(User::UserType type) : type_(type) {}
+
+User::User(const rapidjson::Value &value) : User(User::SELLER)
 {
+    if (!value.IsObject())
+        return;
+    if (value.HasMember("id") && value["id"].IsString())
+        id_ = value["id"].GetString();
+    if (value.HasMember("account") && value["account"].IsString())
+        account_ = value["account"].GetString();
+    if (value.HasMember("password") && value["password"].IsString())
+        password_ = value["password"].GetString();
+    if (value.HasMember("type") && value["type"].IsUint())
+        type_ = (User::UserType)value["type"].GetUint();
 }
 
 User::User(const std::string &id, const std::string &account, const std::string &password, User::UserType type)
@@ -72,6 +84,16 @@ void User::inputData(std::ifstream &in)
     in >> id_ >> account_ >> password_;
 }
 
+rapidjson::Value User::toJSONObject(rapidjson::Document::AllocatorType &allocator)
+{
+    rapidjson::Value vObject(rapidjson::kObjectType);
+    vObject.AddMember("id", rapidjson::StringRef(id_.c_str()), allocator);
+    vObject.AddMember("account", rapidjson::StringRef(account_.c_str()), allocator);
+    vObject.AddMember("password", rapidjson::StringRef(password_.c_str()), allocator);
+    vObject.AddMember("type", type_, allocator);
+    return vObject;
+}
+
 // User End ================================================================================================
 
 // Administrator Begin =====================================================================================
@@ -96,18 +118,37 @@ Administrator::Administrator(const std::string &id,
 
 Administrator::Administrator() : User(User::ADMINISTRATOR) {}
 
+Administrator::Administrator(const rapidjson::Value &value)
+    : User(value) {}
+
 // Administrator End =======================================================================================
 
 // NormalUser Begin ========================================================================================
 
 NormalUser::NormalUser(User::UserType type) : User(type) {}
 
+NormalUser::NormalUser(const rapidjson::Value &value) : User(value)
+{
+    if (value.HasMember("nickName") && value["nickName"].IsString())
+        nickName_ = value["nickName"].GetString();
+    if (value.HasMember("phoneNumber") && value["phoneNumber"].IsString())
+        phoneNumber_ = value["phoneNumber"].GetString();
+    if (value.HasMember("address") && value["address"].IsString())
+        address_ = value["address"].GetString();
+    if (value.HasMember("registrationDate") && value["registrationDate"].IsObject())
+        registrationDate_ = value["registrationDate"].GetObject();
+    if (value.HasMember("balance") && value["balance"].IsDouble())
+        balance_ = value["balance"].GetDouble();
+    if (value.HasMember("accountState") && value["accountState"].IsUint())
+        accountState_ = (NormalUser::AccountState)value["accountState"].GetUint();
+}
+
 NormalUser::NormalUser(const std::string &id, const std::string &account, const std::string &password,
                        User::UserType type, const std::string &nickName, const std::string &phoneNumber,
                        const std::string &address, const Date &registrationDate, double balance,
                        NormalUser::AccountState accountState)
     : User(id, account, password, type), nickName_(nickName),
-      phoneNumber_(phoneNumber), address(address),
+      phoneNumber_(phoneNumber), address_(address),
       registrationDate_(registrationDate), balance_(balance),
       accountState_(accountState) {}
 
@@ -123,7 +164,7 @@ const std::string &NormalUser::getPhoneNumber() const
 
 const std::string &NormalUser::getAddress() const
 {
-    return address;
+    return address_;
 }
 
 const Date &NormalUser::getRegistrationDate() const
@@ -153,7 +194,7 @@ void NormalUser::setPhoneNumber(const std::string &phoneNumber)
 
 void NormalUser::setAddress(const std::string &address)
 {
-    NormalUser::address = address;
+    NormalUser::address_ = address;
 }
 
 void NormalUser::setBalance(double balance)
@@ -200,7 +241,7 @@ void NormalUser::outputData(std::ofstream &out)
     User::outputData(out);
     out << nickName_ << std::endl
         << phoneNumber_ << std::endl
-        << address << std::endl
+        << address_ << std::endl
         << registrationDate_ << std::endl
         << balance_ << std::endl
         << accountState_ << std::endl;
@@ -210,8 +251,20 @@ void NormalUser::inputData(std::ifstream &in)
 {
     User::inputData(in);
     unsigned accountState;
-    in >> nickName_ >> phoneNumber_ >> address >> registrationDate_ >> balance_ >> accountState;
+    in >> nickName_ >> phoneNumber_ >> address_ >> registrationDate_ >> balance_ >> accountState;
     setAccountState(accountState);
+}
+
+rapidjson::Value NormalUser::toJSONObject(rapidjson::Document::AllocatorType &allocator)
+{
+    rapidjson::Value vObject = User::toJSONObject(allocator);
+    vObject.AddMember("nickName", rapidjson::StringRef(nickName_.c_str()), allocator);
+    vObject.AddMember("phoneNumber", rapidjson::StringRef(phoneNumber_.c_str()), allocator);
+    vObject.AddMember("address", rapidjson::StringRef(address_.c_str()), allocator);
+    vObject.AddMember("registrationDate", registrationDate_.toJSONObject(allocator), allocator);
+    vObject.AddMember("balance", balance_, allocator);
+    vObject.AddMember("accountState", accountState_, allocator);
+    return vObject;
 }
 
 // NormalUser End ==========================================================================================
@@ -219,6 +272,12 @@ void NormalUser::inputData(std::ifstream &in)
 // Buyer Start ==========================================================================================
 
 Buyer::Buyer() : NormalUser(User::BUYER) {}
+
+Buyer::Buyer(const rapidjson::Value &value) : NormalUser(value)
+{
+    if (value.HasMember("consumptionPoints") && value["consumptionPoints"].IsUint())
+        consumptionPoints_ = value["consumptionPoints"].GetUint();
+}
 
 Buyer::Buyer(const std::string &id, const std::string &account,
              const std::string &password, const std::string &nickName,
@@ -266,8 +325,21 @@ void Buyer::inputData(std::ifstream &in)
     in >> consumptionPoints_;
 }
 
+rapidjson::Value Buyer::toJSONObject(rapidjson::Document::AllocatorType &allocator)
+{
+    rapidjson::Value vObject = NormalUser::toJSONObject(allocator);
+    vObject.AddMember("consumptionPoints", consumptionPoints_, allocator);
+    return vObject;
+}
+
 // Buyer End ==========================================================================================
 Seller::Seller() : NormalUser(User::SELLER) {}
+
+Seller::Seller(const rapidjson::Value &value) : NormalUser(value)
+{
+    if (value.HasMember("tradingVolume") && value["tradingVolume"].IsUint())
+        tradingVolume_ = value["tradingVolume"].GetUint();
+}
 
 Seller::Seller(const std::string &id, const std::string &account,
                const std::string &password, const std::string &nickName,
@@ -298,4 +370,11 @@ void Seller::inputData(std::ifstream &in)
 {
     NormalUser::inputData(in);
     in >> tradingVolume_;
+}
+
+rapidjson::Value Seller::toJSONObject(rapidjson::Document::AllocatorType &allocator)
+{
+    rapidjson::Value vObject = NormalUser::toJSONObject(allocator);
+    vObject.AddMember("tradingVolume", tradingVolume_, allocator);
+    return vObject;
 }

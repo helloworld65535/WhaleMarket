@@ -13,7 +13,8 @@
 /**
  * @brief DataManager模板类
  * @tparam T 对该类进行数据管理
- * @pre T类必须要有 T(const rapidjson::Value &value) 构造函数
+ * @pre T类必须要有:\n
+ * T(const rapidjson::Value &value) 构造函数\n
  * rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator) 成员函数：将数据转为json格式
  */
 template <class T>
@@ -21,7 +22,7 @@ class DataManager
 {
 public:
     DataManager(std::string dataFilePath, char idHead);
-    ~DataManager();
+    virtual ~DataManager();
 
     /**
      * @brief 从 dataFilePath_ 文件中加载数据
@@ -29,7 +30,7 @@ public:
      * @details
      * 使用到 T(const rapidjson::Value &value) 的构造函数来创建对象
      */
-    bool loadData();
+    virtual bool loadData();
 
     /**
      * @brief 保存数据到 dataFilePath_ 文件中
@@ -91,7 +92,7 @@ protected:
 };
 
 template <class T>
-inline DataManager<T>::DataManager(std::string dataFilePath, char idHead)
+ DataManager<T>::DataManager(std::string dataFilePath, char idHead)
 {
     dataFilePath_ = dataFilePath;
     idHead_ = idHead;
@@ -100,9 +101,9 @@ inline DataManager<T>::DataManager(std::string dataFilePath, char idHead)
 }
 
 template <class T>
-inline DataManager<T>::~DataManager()
+ DataManager<T>::~DataManager()
 {
-    saveData();
+    // saveData();
     for (auto i = dataList_.begin(); i != dataList_.end(); ++i)
     {
         delete (*i);
@@ -249,5 +250,18 @@ inline std::string DataManager<T>::getNewId()
     sprintf(s, "%c%09u", idHead_, ++idNumber_);
     return std::string(s);
 }
+
+#include "User.h"
+class UserManager : public DataManager<User>
+{
+public:
+    UserManager(std::string dataFilePath, char idHead);
+
+    virtual bool loadData();
+    virtual bool saveData();
+
+private:
+    User *newUser(const rapidjson::Value &value);
+};
 
 #endif // DATAMANAGER_H

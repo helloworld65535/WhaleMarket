@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 #include "Date.h"
+#include "rapidjson/rapidjson.h"
+
 class User
 {
 public:
@@ -19,6 +21,7 @@ public:
     User() {}
     ~User() {}
 
+    User(const rapidjson::Value &value);
     User(const std::string &id, const std::string &account, const std::string &password, UserType type);
 
     /// @brief getId
@@ -53,6 +56,8 @@ public:
     /// @brief 从文件获取数据 @param in 文件输入流
     virtual void inputData(std::ifstream &in);
 
+    virtual rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
+
 protected:
     std::string id_;       /* ID */
     std::string account_;  /* 账号8~20位 */
@@ -64,7 +69,7 @@ class Administrator : public User
 {
 public:
     Administrator();
-
+    Administrator(const rapidjson::Value &value);
     ~Administrator() {}
 
     /**
@@ -90,6 +95,7 @@ public:
     NormalUser(UserType type);
     ~NormalUser() {}
 
+    NormalUser(const rapidjson::Value &value);
     NormalUser(const std::string &id, const std::string &account, const std::string &password, UserType type,
                const std::string &nickName, const std::string &phoneNumber, const std::string &address,
                const Date &registrationDate, double balance, AccountState accountState);
@@ -138,10 +144,12 @@ public:
     /// @brief 从文件获取数据 @param in 文件输入流
     virtual void inputData(std::ifstream &in) override;
 
+    virtual rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
+
 protected:
     std::string nickName_;      /* 昵称 */
     std::string phoneNumber_;   /* 电话号码 */
-    std::string address;        /* 地址 */
+    std::string address_;       /* 地址 */
     Date registrationDate_;     /* 注册时间 */
     double balance_;            /* 余额 */
     AccountState accountState_; /* 账号状态 */
@@ -151,6 +159,7 @@ class Buyer : public NormalUser
 {
 public:
     Buyer();
+    Buyer(const rapidjson::Value &value);
 
     /**
      * @brief Buyer构造
@@ -196,6 +205,8 @@ public:
     /// @brief 从文件获取数据 @param in 文件输入流
     virtual void inputData(std::ifstream &in) override;
 
+    virtual rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
+
 protected:
     unsigned int consumptionPoints_; /* 消费积分 */
 };
@@ -204,7 +215,7 @@ class Seller : public NormalUser
 {
 public:
     Seller();
-
+    Seller(const rapidjson::Value &value);
     /**
      * @brief Seller构造
      * @param id ID
@@ -233,6 +244,8 @@ public:
 
     /// @brief 从文件获取数据 @param in 文件输入流
     virtual void inputData(std::ifstream &in) override;
+
+    virtual rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
 
 protected:
     unsigned int tradingVolume_; /* 交易量 */

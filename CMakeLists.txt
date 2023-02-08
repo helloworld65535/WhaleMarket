@@ -6,12 +6,9 @@ project(WhaleMarket VERSION 0.1.0)
 set(SOURCES
     src/Date.cpp
     src/User.cpp
-    # src/UserManager.cpp
     src/Good.cpp
-    # src/GoodManager.cpp
     src/Order.cpp
-    # src/OrderManager.cpp
-
+    src/DataManager.cpp
     test/test.cpp)
 
 add_executable(${PROJECT_NAME} 
