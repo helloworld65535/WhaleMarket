@@ -13,7 +13,6 @@ set(SOURCES
 
 add_executable(${PROJECT_NAME} 
     ${SOURCES}
-    include/DataManager.h
 )
 
 target_include_directories(${PROJECT_NAME}
