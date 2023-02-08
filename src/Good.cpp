@@ -82,6 +82,19 @@ void Good::setGoodState(Good::GoodState goodState)
     goodState_ = goodState;
 }
 
+rapidjson::Value Good::toJSONObject(rapidjson::Document::AllocatorType &allocator)
+{
+    rapidjson::Value vObject(rapidjson::kObjectType);
+    vObject.AddMember("id", rapidjson::StringRef(id_.c_str()), allocator);
+    vObject.AddMember("name", rapidjson::StringRef(name_.c_str()), allocator);
+    vObject.AddMember("price", rapidjson::Value().SetDouble(price_), allocator);
+    vObject.AddMember("description", rapidjson::StringRef(description_.c_str()), allocator);
+    vObject.AddMember("sellerId", rapidjson::StringRef(sellerId_.c_str()), allocator);
+    vObject.AddMember("shelfDate", shelfDate_.toJSONObject(allocator), allocator);
+    vObject.AddMember("goodState_", rapidjson::Value().SetUint(goodState_), allocator);
+    return vObject;
+}
+
 std::ostream &operator<<(std::ostream &out, const Good &good)
 {
     out << good.id_ << std::endl

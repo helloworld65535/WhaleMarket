@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include "Date.h"
+#include "rapidjson/document.h"
 
 class Good
 {
@@ -49,10 +50,11 @@ public:
 
     void setGoodState(GoodState goodState);
 
-
     friend std::ostream &operator<<(std::ostream &out, const Good &good);
 
     friend std::istream &operator>>(std::istream &in, Good &good);
+
+    rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
 
 protected:
     std::string id_;          ///< 商品ID

@@ -91,6 +91,23 @@ bool Date::operator<=(const Date &date)
     return !((*this) > date);
 }
 
+std::string Date::toString()
+{
+    char s[11];
+    sprintf(s, "%04u/%02u/%02u", year_, month_, day_);
+    std::string str = s;
+    return str;
+}
+
+rapidjson::Value Date::toJSONObject(rapidjson::Document::AllocatorType &allocator)
+{
+    rapidjson::Value vObject(rapidjson::kObjectType);
+    vObject.AddMember("year", year_, allocator);
+    vObject.AddMember("month", month_, allocator);
+    vObject.AddMember("day", day_, allocator);
+    return vObject;
+}
+
 unsigned int Date::getDaysOfMonth(unsigned int year, unsigned int month)
 {
     if (isLeapYear(year))

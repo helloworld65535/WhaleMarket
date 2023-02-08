@@ -2,6 +2,7 @@
 #define DATE_H
 
 #include <iostream>
+#include "rapidjson/document.h"
 
 class Date
 {
@@ -24,6 +25,10 @@ public:
 
     friend std::ostream &operator<<(std::ostream &cout, const Date &date); // 输出到std::ostream
     friend std::istream &operator>>(std::istream &cin, Date &date);        // 从 std::istream 获取输入
+
+    std::string toString();
+
+    rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
 
     /*     Date getNextNDays(int n);      // 取得year-month-day的下n天日期
         Date getPreviousNDays(int n);  // 取得year-month-day的前n天日期

@@ -6,19 +6,21 @@ project(WhaleMarket VERSION 0.1.0)
 set(SOURCES
     src/Date.cpp
     src/User.cpp
-    src/UserManager.cpp
+    # src/UserManager.cpp
     src/Good.cpp
-    src/GoodManager.cpp
+    # src/GoodManager.cpp
     src/Order.cpp
-    src/OrderManager.cpp
-    test/test.cpp
-)
+    # src/OrderManager.cpp
+
+    test/test.cpp)
 
 add_executable(${PROJECT_NAME} 
     ${SOURCES}
+    include/DataManager.h
 )
 
 target_include_directories(${PROJECT_NAME}
-PRIVATE 
+PUBLIC 
 include
+
 )
