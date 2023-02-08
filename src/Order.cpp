@@ -5,6 +5,29 @@ Order::Order()
     quantity_ = 0;
 }
 
+Order::Order(const rapidjson::Value &value)
+{
+    //     vObject.AddMember("id", rapidjson::StringRef(id_.c_str()), allocator);
+    // vObject.AddMember("goodId", rapidjson::StringRef(goodId_.c_str()), allocator);
+    // vObject.AddMember("buyerId", rapidjson::StringRef(buyerId_.c_str()), allocator);
+    // vObject.AddMember("date", date_.toJSONObject(allocator), allocator);
+    // vObject.AddMember("quantity", quantity_, allocator);
+    if (!value.IsObject())
+        return;
+
+    if (value.HasMember("id") && value["id"].IsString())
+        id_ = value["id"].GetString();
+    if (value.HasMember("goodId") && value["goodId"].IsString())
+        goodId_ = value["goodId"].GetString();
+    if (value.HasMember("buyerId") && value["buyerId"].IsString())
+        buyerId_ = value["buyerId"].GetString();
+    if (value.HasMember("date") && value["date"].IsObject())
+        date_ = value["date"].GetObject();
+    if (value.HasMember("quantity") && value["quantity"].IsUint())
+        quantity_ = value["quantity"].GetUint();
+        
+}
+
 Order::Order(const std::string &id, const std::string &goodId,
              const std::string &sellerId, const Date &date,
              unsigned int quantity)
@@ -59,6 +82,17 @@ void Order::setDate(const Date &date)
 void Order::setQuantity(unsigned int quantity)
 {
     quantity_ = quantity;
+}
+
+rapidjson::Value Order::toJSONObject(rapidjson::Document::AllocatorType &allocator)
+{
+    rapidjson::Value vObject(rapidjson::kObjectType);
+    vObject.AddMember("id", rapidjson::StringRef(id_.c_str()), allocator);
+    vObject.AddMember("goodId", rapidjson::StringRef(goodId_.c_str()), allocator);
+    vObject.AddMember("buyerId", rapidjson::StringRef(buyerId_.c_str()), allocator);
+    vObject.AddMember("date", date_.toJSONObject(allocator), allocator);
+    vObject.AddMember("quantity", quantity_, allocator);
+    return vObject;
 }
 
 std::ostream &operator<<(std::ostream &out, const Order &order)

@@ -7,15 +7,8 @@ User::User(User::UserType type) : type_(type)
 {
 }
 
-User::User(const std::string &id, const std::string &account, const std::string &password, User::UserType type) : id_(
-                                                                                                                      id),
-                                                                                                                  account_(
-                                                                                                                      account),
-                                                                                                                  password_(
-                                                                                                                      password),
-                                                                                                                  type_(type)
-{
-}
+User::User(const std::string &id, const std::string &account, const std::string &password, User::UserType type)
+    : id_(id), account_(account), password_(password), type_(type) {}
 
 const std::string &User::getId() const
 {
@@ -101,9 +94,7 @@ Administrator::Administrator(const std::string &id,
 //     in >> id_ >> account_ >> password_;
 // }
 
-Administrator::Administrator() : User(User::ADMINISTRATOR)
-{
-}
+Administrator::Administrator() : User(User::ADMINISTRATOR) {}
 
 // Administrator End =======================================================================================
 

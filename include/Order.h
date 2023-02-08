@@ -5,12 +5,13 @@
 #include <string>
 #include <ostream>
 #include "Date.h"
+#include "rapidjson/rapidjson.h"
 
 class Order
 {
 public:
     Order();
-
+    Order(const rapidjson::Value &value);
     Order(const std::string &id, const std::string &goodId, const std::string &sellerId, const Date &date,
           unsigned int quantity);
 
@@ -38,6 +39,8 @@ public:
 
     friend std::ostream &operator<<(std::ostream &out, const Order &order);
     friend std::istream &operator>>(std::istream &in, Order &order);
+
+    rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
 
 protected:
     std::string id_;        ///< 订单ID
