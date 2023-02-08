@@ -18,7 +18,7 @@ public:
     } GoodState;
 
     Good();
-
+    Good(const rapidjson::Value &value);
     Good(const std::string &id, const std::string &name, double price, const std::string &description,
          const std::string &sellerId, const Date &shelfTime, GoodState goodState);
 

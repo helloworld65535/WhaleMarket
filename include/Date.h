@@ -16,6 +16,7 @@ public:
     static bool isLeapYear(unsigned int year); // 判断year是否为闰年
     bool isLeapYear();                         // 判断当前Date是否为闰年
     void operator=(const Date &date);          // =赋值
+    void operator=(const rapidjson::Value &value);          // =赋值
     bool operator==(const Date &date);         // ==比较
     bool operator!=(const Date &date);         // !=比较
     bool operator>(const Date &date);          // >比较
@@ -29,6 +30,7 @@ public:
     std::string toString();
 
     rapidjson::Value toJSONObject(rapidjson::Document::AllocatorType &allocator);
+    
 
     /*     Date getNextNDays(int n);      // 取得year-month-day的下n天日期
         Date getPreviousNDays(int n);  // 取得year-month-day的前n天日期

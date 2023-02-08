@@ -7,10 +7,38 @@ Good::Good()
     goodState_ = SOLD_OUT;
 }
 
+Good::Good(const rapidjson::Value &value) : Good()
+{
+    if (!value.IsObject())
+        return;
+    if (value.HasMember("id") && value["id"].IsString())
+        id_ = value["id"].GetString();
+
+    if (value.HasMember("name") && value["name"].IsString())
+        name_ = value["name"].GetString();
+
+    if (value.HasMember("price") && value["price"].IsDouble())
+        price_ = value["price"].GetDouble();
+
+    if (value.HasMember("description") && value["description"].IsString())
+        description_ = value["description"].GetString();
+
+    if (value.HasMember("sellerId") && value["sellerId"].IsString())
+        sellerId_ = value["sellerId"].GetString();
+
+    if (value.HasMember("shelfDate") && value["shelfDate"].IsObject())
+        shelfDate_ = value["shelfDate"].GetObject();
+
+    if (value.HasMember("goodState") && value["goodState"].IsUint())
+        goodState_ = (Good::GoodState)value["goodState"].GetUint();
+}
+
 Good::Good(const std::string &id, const std::string &name, double price, const std::string &description,
            const std::string &sellerId, const Date &shelfTime, Good::GoodState goodState)
     : id_(id), name_(name), price_(price), description_(description),
-      sellerId_(sellerId), shelfDate_(shelfTime), goodState_(goodState) {}
+      sellerId_(sellerId), shelfDate_(shelfTime), goodState_(goodState)
+{
+}
 
 const std::string &Good::getId() const
 {

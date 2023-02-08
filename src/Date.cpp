@@ -32,6 +32,16 @@ void Date::operator=(const Date &date)
     day_ = date.day_;
 }
 
+void Date::operator=(const rapidjson::Value &value)
+{
+    if (value.HasMember("year") && value["year"].IsUint())
+        year_ = value["year"].GetUint();
+    if (value.HasMember("month") && value["month"].IsUint())
+        month_ = value["month"].GetUint();
+    if (value.HasMember("day") && value["day"].IsUint())
+        day_ = value["day"].GetUint();
+}
+
 bool Date::operator==(const Date &date)
 {
     return ((year_ == date.year_) && (month_ == date.month_) && (day_ == date.day_));
