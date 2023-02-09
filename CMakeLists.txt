@@ -9,7 +9,11 @@ set(SOURCES
     src/Good.cpp
     src/Order.cpp
     src/DataManager.cpp
-    test/test.cpp)
+    src/Menu.cpp
+    src/MainMenu.cpp
+    # test/test.cpp
+    WhaleMarket.cpp
+    )
 
 add_executable(${PROJECT_NAME} 
     ${SOURCES}

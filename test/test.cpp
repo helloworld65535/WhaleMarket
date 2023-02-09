@@ -1,18 +1,25 @@
-
-#include "DataManager.h"
-#include "Good.h"
-#include "Order.h"
+#include "Menu.h"
 
 int main(void)
 {
-    UserManager userManager("User.json", 'U');
-    userManager.loadData();
-    // userManager.addData(new Administrator("Admin", "Admin", "123456"));
-    // userManager.addData(new Seller("Seller", "Seller", "123456","昵称Seller","13207900790","北京北京",Date(2023,2,2),5000,NormalUser::NORMAL,23));
-    // userManager.addData(new Buyer("Buyer", "Buyer", "123456","昵称Buyer","13207900790","北京北京",Date(2023,2,2),5000,NormalUser::NORMAL,23));
+    // std::vector<Menu *> menus;
 
-    userManager.traversal([](User *user) -> void
-                          { std::cout << user->getAccount() << std::endl; });
-    userManager.saveData();
+    Menu *menu = new Menu("首页");
+    Function *func1 = new Function("功能一");
+    Function *func2 = new Function("功能二");
+    
+    Menu *menu1 = new Menu("功能一界面");
+    Menu *menu2 = new Menu("功能二界面");
+
+    func1->setNextMenu(menu1);
+    func2->setNextMenu(menu2);
+
+    menu->addFunction(func1);
+    menu->addFunction(func2);
+
+    Menu *main = menu;
+
+
+
     return 0;
 }
